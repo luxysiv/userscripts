@@ -9,4 +9,4 @@ https://filters.adtidy.org/android/filters/14_optimized.txt
 #Bộ lọc theo dõi
 https://filters.adtidy.org/android/filters/17_optimized.txt
 #ABPVN mod
-https://github.com/luxysiv/custom-ads-filters/raw/main/abpvn-ext.txt
+https://github.com/luxysiv/custom-filters/raw/main/abpvn-ext.txt
