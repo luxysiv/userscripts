@@ -1,12 +1,4 @@
-#Bộ lọc EasyList + Adguard tiếng Anh
-https://filters.adtidy.org/android/filters/2_optimized.txt
-#Spyware
-https://filters.adtidy.org/android/filters/3_optimized.txt
-#Social
-https://filters.adtidy.org/android/filters/4_optimized.txt
-#Bộ lọc phiền toái 
-https://filters.adtidy.org/android/filters/14_optimized.txt
-#Bộ lọc theo dõi
-https://filters.adtidy.org/android/filters/17_optimized.txt
+#Bộ lọc EasyList
+https://easylist.to/easylist/easylist.txt
 #ABPVN mod
 https://github.com/luxysiv/custom-filters/raw/main/abpvn-ext.txt
