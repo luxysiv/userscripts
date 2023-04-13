@@ -1,0 +1,4 @@
+#Bộ lọc EasyList
+https://easylist.to/easylist/easylist.txt
+#ABPVN mod
+https://github.com/luxysiv/custom-filters/raw/main/abpvn-ext.txt
