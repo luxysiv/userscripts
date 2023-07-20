@@ -8,6 +8,7 @@
 // @grant        none
 // @run-at       document-start
 // @homepage     https://github.com/luxysiv/userscripts
+// @updateURL    https://luxysiv.github.io/userscripts/cosmetic.user.js
 // @downloadURL  https://luxysiv.github.io/userscripts/cosmetic.user.js
 // ==/UserScript==
 /// @stats {{.statistics}}
