@@ -4,7 +4,7 @@
 // @version      {{.version}}
 // @description  Blocks annoying elements in {{if .isLite}}top {{.topDomainCount}} domains{{else}}pages{{end}}, sourced from many different filter lists
 // @author       luxysiv 
-// @match        *://*
+// @match        *://*/*
 // @grant        none
 // @run-at       document-start
 // @homepage     https://github.com/luxysiv/userscripts
