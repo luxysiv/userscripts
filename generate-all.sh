@@ -10,17 +10,19 @@ error() {
 echo "::group::Generating cosmetic filter script"
 cd ./generate/cosmetic || error "Failed to change directory to ./generate/cosmetic"
 bash ./generate.sh || error "Failed to execute generate.sh"
-cd .. || error "Failed to change directory back"
+cd ../.. || error "Failed to change directory back"
 echo "::endgroup::"
 ls
 
-# Kiểm tra sự tồn tại của cosmetic.user.js
-if [ ! -f "cosmetic.user.js" ]; then
-    error "cosmetic.user.js not found"
-fi
+# Tìm và thêm tất cả các tệp cosmetic.user.js
+find . -name "cosmetic.user.js" -exec git add {} \; || error "Failed to add the userscript to repo"
 
-git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com" || error "Failed to set git user email"
-git config --global user.name "$(gh api /users/${GITHUB_ACTOR} | jq .name -r)" || error "Failed to set git user name"
-git add ../../cosmetic.user.js || error "Failed to add the userscript to repo"
-git commit -m "Update userscript" --author=. || error "Failed to commit the userscript to repo"
-git push origin main || error "Failed to push the userscript to repo"
+# Kiểm tra xem có tệp nào đã được thêm không
+if git diff --cached --exit-code --quiet; then
+    echo "No changes to commit"
+else
+    git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com" || error "Failed to set git user email"
+    git config --global user.name "$(gh api /users/${GITHUB_ACTOR} | jq .name -r)" || error "Failed to set git user name"
+    git commit -m "Update userscript" --author=. || error "Failed to commit the userscript to repo"
+    git push origin main || error "Failed to push the userscript to repo"
+fi
