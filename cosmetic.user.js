@@ -9,7 +9,7 @@
 // @grant        none
 // @run-at       document-start
 // @homepage     https://github.com/luxysiv/userscripts
-// @updateURL    
+// @updateURL    https://userscripts.timie.workers.dev/cosmetic.user.js
 // @downloadURL  https://userscripts.timie.workers.dev/cosmetic.user.js
 // ==/UserScript==
 /// @stats blockers for 25488 domains, injected CSS rules for 1 domains
