@@ -16,7 +16,7 @@ jobs:
       uses: actions/setup-go@main
       
     - name: "Auto-generate userscript"
-      run: bash generate-all.sh 2>&1
+      run: bash generate/generate-all.sh 2>&1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
