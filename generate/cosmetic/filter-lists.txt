@@ -1,1 +1,1 @@
-https://luxysiv.github.io/custom-filters/filters.txt
+https://custom-rules.timie.workers.dev/
