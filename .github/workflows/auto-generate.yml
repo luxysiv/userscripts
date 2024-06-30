@@ -24,10 +24,10 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@main
       
-    - name: "Run generate script"
+    - name: "Auto-generate userscript"
+      shell: bash
       run: |
-        chmod +x ./generate.sh
-        ./generate.sh
+        sudo bash ./generate-all.sh 2>&1
       working-directory: generate
 
     - name: Delete workflow runs
