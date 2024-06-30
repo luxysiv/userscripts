@@ -7,6 +7,7 @@ cd ./generate/cosmetic
 bash ./generate.sh
 cd ..
 echo "::endgroup::"
+ls
 
 git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
 git config --global user.name "$(gh api /users/${GITHUB_ACTOR} | jq .name -r)"
