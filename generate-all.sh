@@ -3,7 +3,7 @@ set -euo pipefail
 
 
 echo "::group::Generating cosmetic filter script"
-cd cosmetic
+cd ./generate/cosmetic
 bash ./generate.sh
 cd ..
 echo "::endgroup::"
