@@ -1,11 +1,6 @@
 name: Auto-generate userscripts
-
 on:
   push:
-    branches: [ main ]
-    paths:
-      - "generate/**"
-      - ".github/workflows/**"
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
@@ -23,7 +18,7 @@ jobs:
     - name: "Auto-generate userscript"
       run: bash generate-all.sh 2>&1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
