@@ -23,7 +23,7 @@ jobs:
       
     - name: "Auto-generate userscript"
       shell: bash
-      run: bash ./generate/generate-all.sh 2>&1
+      run: bash generate-all.sh 2>&1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN
 
