@@ -21,6 +21,6 @@ fi
 
 git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com" || error "Failed to set git user email"
 git config --global user.name "$(gh api /users/${GITHUB_ACTOR} | jq .name -r)" || error "Failed to set git user name"
-git add cosmetic.user.js || error "Failed to add the userscript to repo"
+git add ../../cosmetic.user.js || error "Failed to add the userscript to repo"
 git commit -m "Update userscript" --author=. || error "Failed to commit the userscript to repo"
 git push origin main || error "Failed to push the userscript to repo"
