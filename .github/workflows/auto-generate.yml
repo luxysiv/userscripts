@@ -16,6 +16,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    permissions: write-all
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -27,8 +28,6 @@ jobs:
     - name: "Auto-generate userscript"
       shell: bash
       run: |
-        GITHUB_ACTOR_ID=${{ github.actor }}
-        GITHUB_ACTOR=${{ github.repository_owner }}
         sudo bash ./generate-all.sh 2>&1
       working-directory: generate
 
