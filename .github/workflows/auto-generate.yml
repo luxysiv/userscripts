@@ -13,8 +13,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions: write-all
-    
+    permissions: write-all    
     steps:
     - uses: actions/checkout@main
 
@@ -22,7 +21,6 @@ jobs:
       uses: actions/setup-go@main
       
     - name: "Auto-generate userscript"
-      shell: bash
       run: bash generate-all.sh 2>&1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN
