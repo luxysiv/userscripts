@@ -12,7 +12,6 @@ cd ./generate/cosmetic || error "Failed to change directory to ./generate/cosmet
 bash ./generate.sh || error "Failed to execute generate.sh"
 cd ../.. || error "Failed to change directory back"
 echo "::endgroup::"
-ls
 
 # Tìm và thêm tất cả các tệp cosmetic.user.js
 find . -name "cosmetic.user.js" -exec git add {} \; || error "Failed to add the userscript to repo"
