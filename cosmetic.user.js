@@ -1,6 +1,6 @@
 // THIS FILE IS AUTO-GENERATED. DO NOT EDIT. See generate/cosmetic directory for more info
 // ==UserScript==
-// @name         Cosmetic Ad Block for Bromite
+// @name         Cosmetic Ad Block for Browser
 // @namespace    luxysiv
 // @version      2024.07.01
 // @description  Blocks annoying elements in pages, sourced from many different filter lists
