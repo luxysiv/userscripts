@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Cosmetic Ad Block for Bromite{{if .isLite}} (Lite){{end}}
+// @name         Cosmetic Ad Block for Browser{{if .isLite}} (Lite){{end}}
 // @namespace    luxysiv
 // @version      {{.version}}
 // @description  Blocks annoying elements in {{if .isLite}}top {{.topDomainCount}} domains{{else}}pages{{end}}, sourced from many different filter lists
