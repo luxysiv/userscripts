@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         Cosmetic Ad Block for Browser
 // @namespace    luxysiv
-// @version      2026.01.04
+// @version      2026.01.05
 // @description  Blocks annoying elements in pages, sourced from many different filter lists
 // @author       luxysiv 
 // @match        *://*/*
@@ -15,7 +15,7 @@
 /// @stats blockers for 27931 domains, injected CSS rules for 1 domains
 {
     let log = function (...data) {
-        console.log("[Cosmetic filters by luxysiv (v2026.01.04 full)]:", ...data);
+        console.log("[Cosmetic filters by luxysiv (v2026.01.05 full)]:", ...data);
     }
 
 
