@@ -1,1 +1,4 @@
-https://custom-rules.timie.workers.dev/
+#Bộ lọc EasyList
+https://easylist.to/easylist/easylist.txt
+#ABPVN
+https://raw.githubusercontent.com/abpvn/abpvn/refs/heads/master/filter/abpvn.txt
