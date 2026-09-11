@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"text/template"
@@ -114,6 +115,7 @@ func main() {
 	var (
 		inputLists     = flag.String("input", "filter-lists.txt", "Path to file that defines URLs to blocklists")
 		scriptTarget   = flag.String("output", "cosmetic.user.js", "Path to output file")
+		commitFlag     = flag.Bool("commit", false, "After generating, stage the output and commit+push when changed (CI step)")
 		topDomainsPath = flag.String("top", "", "Path to file downloaded from http://s3-us-west-1.amazonaws.com/umbrella-static/index.html")
 		topDomainCount = flag.Int("topCount", 1_000_000, "Include up to this rank of highest-ranking top domains, only makes sense with -top")
 	)
@@ -200,4 +202,18 @@ func main() {
 	}
 
 	fmt.Printf("Wrote userscript to %s\n", *scriptTarget)
+
+	if !*commitFlag {
+		return
+	}
+
+	fmt.Println("::group::Committing userscript")
+	abs, err := filepath.Abs(*scriptTarget)
+	if err != nil {
+		log.Fatalf("cannot resolve output path %s: %v\n", *scriptTarget, err)
+	}
+	if err := commitIfChanged(abs); err != nil {
+		log.Fatalf("commit step: %v\n", err)
+	}
+	fmt.Println("::endgroup::")
 }

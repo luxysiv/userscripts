@@ -20,11 +20,14 @@ An (optional) `MutationObserver` re-scans the page to defeat elements that
 appear late or rely on inline styles (cookie banners, lazy-loaded ads).
 
 # Development
-The generator lives in `generate/cosmetic` (Go).
+One binary in `generate/cosmetic` (Go) does the whole job: it downloads the
+filter lists, renders `cosmetic.user.js`, and with `-commit` also stages,
+commits and pushes the result when it changed (the daily CI step).
 
 ```bash
 cd generate/cosmetic
-bash generate.sh   # downloads filter lists, writes ../../cosmetic.user.js
+go run . -input filter-lists.txt -output ../../cosmetic.user.js   # build only
+go run . -input filter-lists.txt -output ../../cosmetic.user.js -commit   # build + commit & push if changed
 ```
 
 Daily, a GitHub Actions workflow re-runs this and commits the fresh script.

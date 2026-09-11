@@ -19,7 +19,8 @@ jobs:
         cache-dependency-path: generate/cosmetic/go.sum
       
     - name: "Auto-generate userscript"
-      run: bash generate/generate-all.sh 2>&1
+      working-directory: generate/cosmetic
+      run: go run . -input filter-lists.txt -output ../../cosmetic.user.js -commit 2>&1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
