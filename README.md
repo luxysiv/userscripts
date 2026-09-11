@@ -10,17 +10,17 @@ A pipeline (`generate/cosmetic`) downloads cosmetic rules from filter lists
 "Cosmetic Ad Block" userscript that hides annoying elements via injected CSS.
 
 ## Build modes
-- **Lazy load (default)**: `cosmetic.user.js` is a small shell with an inline
-  baseline covering the top 1.000 domains (plus general rules), which are
-  hidden immediately at `document-start`. The full ruleset lives in
-  `cosmetic.rules.json` (the runtime bundle) and is fetched once per day,
-  cached in `localStorage`, and applied as an upgrade on top of the baseline.
-- **Single-file (legacy)**: `-no-lazy`-like build — replace the `main.go`
-  invocation in `generate/cosmetic/generate.sh` with the commented-out
-  single-file alternative. All rules are embedded inline; no network
-  dependency at runtime, but the userscript is the full bundle size.
+- **Single-file (default)**: `cosmetic.user.js` embeds ALL rules inline. Every
+  visited page is injected with its matched CSS immediately at
+  `document-start` — no network dependency, works offline.
+- **Lazy load (optional)**: uncomment the lazy block in
+  `generate/cosmetic/generate.sh`. It produces a small shell
+  (`cosmetic.user.js`) with a top-N domain baseline plus a separate JSON rules
+  bundle (`cosmetic.rules.json`) that the shell fetches once per day and
+  caches in `localStorage`. Rare domains get their rules ~a second after a
+  first fetch instead of instantly.
 
-### Runtime bundle
+### Runtime bundle (lazy mode only)
 The lazy shell fetches rules from
 `https://raw.githubusercontent.com/luxysiv/userscripts/main/cosmetic.rules.json`
 (served with `Access-Control-Allow-Origin: *`, so `fetch` works under
@@ -31,7 +31,7 @@ decompress it before `response.json()`.
 Run the generator manually for testing:
 ```bash
 cd generate/cosmetic
-bash generate.sh   # writes ../../cosmetic.user.js + ../../cosmetic.rules.json
+bash generate.sh   # writes ../../cosmetic.user.js
 ```
 
 # Thanks for [@xarantolus](https://github.com/xarantolus)
