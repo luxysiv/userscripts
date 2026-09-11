@@ -33,10 +33,6 @@
     let injectionRules = {{.injectionRules }};
     let rules = {{.rules }};
 
-    function makeStore(dedup, inj, r) {
-        return { dedup: dedup, inj: inj, rules: r };
-    }
-
     // ---------------------------------------------------------------------
     // Domain-suffix rule lookup
     // ---------------------------------------------------------------------
@@ -95,7 +91,7 @@
     // Two injections per page:
     //   1. the "common" <style>: general "*##..." rules that apply everywhere
     //   2. the site's own <style>: rules specific to the visited domain
-    function applyStore(store, source) {
+    function applyStore(store) {
         let host = (location.hostname || "").toLowerCase();
         let found = getRules(store, host);
 
@@ -106,7 +102,7 @@
             .map(r => r["s"]).join(",");
         let css = found.filter(r => r["i"] != null).map(r => r["i"]).join("");
 
-        log("Applying", source, "rules for", host,
+        log("Applying rules for", host,
             "common:" + (general ? general.length : 0) + " own:" + generic.length + " selector chars");
 
         let sig = (general || "") + "|" + (generalInj || "") + "|" + generic + "|" + css;
@@ -191,10 +187,22 @@
     // ---------------------------------------------------------------------
     // Boot
     // ---------------------------------------------------------------------
-    let baseline = makeStore(deduplicatedStrings, injectionRules, rules);
+
+    // Older lazy-load builds cached the rules under a per-day key in
+    // localStorage ("cosmetic-rules-v*"). This build no longer writes any
+    // cache, so purge those stale keys once (no new cache is ever created).
+    try {
+        let cache = localStorage;
+        for (let i = cache.length - 1; i >= 0; i--) {
+            let key = cache.key(i);
+            if (key && key.indexOf("cosmetic-rules-v") === 0) cache.removeItem(key);
+        }
+    } catch (e) { /* storage unavailable (private mode, file: URI, ...) */ }
+
+    let baseline = { dedup: deduplicatedStrings, inj: injectionRules, rules: rules };
 
     // Runs once, synchronously, at document-start (documentElement exists
     // before <head>), so every page gets its styles immediately, with no
     // network dependency.
-    applyStore(baseline, "baseline");
+    applyStore(baseline);
 }
