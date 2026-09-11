@@ -1,9 +1,6 @@
 # Status
 [![Tạo userscripts](https://github.com/luxysiv/userscripts/actions/workflows/auto-generate.yml/badge.svg)](https://github.com/luxysiv/userscripts/actions/workflows/auto-generate.yml)
 
-# About
-Copycat and edit from [xarantolus/bromite-userscripts](https://github.com/xarantolus/bromite-userscripts)
-
 # How it works
 `cosmetic.user.js` is a self-contained userscript: the full rule set (from
 EasyList, ABPVN, ...) is embedded inline, so it needs no network dependency at
@@ -32,5 +29,3 @@ go run . -input filter-lists.txt -output ../cosmetic.user.js -commit   # build +
 ```
 
 Daily, a GitHub Actions workflow re-runs this and commits the fresh script.
-
-# Thanks for [@xarantolus](https://github.com/xarantolus)
