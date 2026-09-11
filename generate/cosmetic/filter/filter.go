@@ -16,20 +16,41 @@ type Rule struct {
 	InjectedCSS string
 }
 
+// hasParenthesesBalanced is a light sanity check used as a fallback for
+// selectors that target the modern Chromium-only :has() pseudo-class, which
+// the older cascadia parser does not fully understand.
+func hasParenthesesBalanced(s string) bool {
+	depth := 0
+	for _, r := range s {
+		switch r {
+		case '(':
+			depth++
+		case ')':
+			depth--
+			if depth < 0 {
+				return false
+			}
+		}
+	}
+	return depth == 0
+}
+
 func isIncompatibleSelector(s string) bool {
-	// We want only valid selectors, so we check if we can parse it
 	_, err := cascadia.Parse(s)
-	if err != nil {
-		return true
+	if err == nil {
+		// Valid for our parser, assume it also works in the browser
+		return false
 	}
 
-	// Chromium doesn't seem to support the :has() selector
-	if strings.Contains(s, ":has(") {
-		return true
+	// :has() has been supported by Chromium since v105 (2022). cascadia 1.3.1
+	// only understands simple :has() arguments, so a parse failure alone is no
+	// reason to drop rules that use it. Require at least balanced parentheses
+	// so plainly broken selectors don't end up in the generated script.
+	if strings.Contains(s, ":has(") && hasParenthesesBalanced(s) {
+		return false
 	}
 
-	// We assume that anything else is supported
-	return false
+	return true
 }
 
 var (

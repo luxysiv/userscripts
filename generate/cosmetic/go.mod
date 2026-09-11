@@ -1,6 +1,6 @@
 module cosmetic
 
-go 1.15
+go 1.23
 
 require github.com/andybalholm/cascadia v1.3.1
 

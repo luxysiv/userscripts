@@ -13,8 +13,8 @@ bash ./generate.sh || error "Failed to execute generate.sh"
 cd ../.. || error "Failed to change directory back"
 echo "::endgroup::"
 
-# Tìm và thêm tất cả các tệp cosmetic.user.js
-find . -name "cosmetic.user.js" -exec git add {} \; || error "Failed to add the userscript to repo"
+# Tìm và thêm tất cả các tệp userscript và rules bundle
+find . \( -name "cosmetic.user.js" -o -name "cosmetic.rules.json" \) -exec git add {} \; || error "Failed to add the userscript to repo"
 
 # Kiểm tra xem có tệp nào đã được thêm không
 if git diff --cached --exit-code --quiet; then
