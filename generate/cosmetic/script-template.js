@@ -106,16 +106,17 @@
             }
         }
 
-        // Only rules matching the visited domain (or a subdomain of it) are
-        // injected. General "*##..." rules (the legacy "" entry) are NOT
-        // included, so a page never receives other sites' or global CSS.
         return output;
+    }
+
+    function resolveVal(v, store) {
+        return (typeof v === 'number') ? store.dedup[v] : v;
     }
 
     // ---------------------------------------------------------------------
     // Style injection
     // ---------------------------------------------------------------------
-    let active = { generic: "", css: "", page: "" };
+    let active = { sig: "", page: "" };
     let observer = null;
     let pendingScan = false;
     let styleEls = [];
@@ -130,32 +131,44 @@
         styleEls.push(style);
     }
 
+    // Two injections per page:
+    //   1. the "common" <style>: general "*##..." rules that apply everywhere
+    //   2. the site's own <style>: rules specific to the visited domain
     function applyStore(store, source) {
         let host = (location.hostname || "").toLowerCase();
         let found = getRules(store, host);
 
+        let general = resolveVal(store.rules[""], store);
+        let generalInj = resolveVal(store.inj[""], store);
+
         let generic = found.filter(r => r["s"] != null)
             .map(r => r["s"]).join(",");
         let css = found.filter(r => r["i"] != null).map(r => r["i"]).join("");
-        let page = found.filter(r => r["s"] != null)
-            .map(r => r["s"]).join(",");
 
-        log("Applying", source, "rules for", host, generic.length + " selector chars");
+        log("Applying", source, "rules for", host,
+            "common:" + (general ? general.length : 0) + " own:" + generic.length + " selector chars");
 
-        let changed = generic !== active.generic || css !== active.css;
-        if (changed) {
-            // Re-inject the combined stylesheet with the newest set.
+        let sig = (general || "") + "|" + (generalInj || "") + "|" + generic + "|" + css;
+        if (sig !== active.sig) {
             styleEls.forEach(el => {
                 if (el.parentNode) el.parentNode.removeChild(el);
             });
             styleEls = [];
-            if (generic) appendStyle(generic + HIDE_RULE);
-            if (css) appendStyle(css);
-            active.generic = generic;
-            active.css = css;
+
+            let common = "";
+            if (general) common += general + HIDE_RULE;
+            if (generalInj) common += generalInj;
+            if (common) appendStyle(common);
+
+            let own = "";
+            if (generic) own += generic + HIDE_RULE;
+            if (css) own += css;
+            if (own) appendStyle(own);
+
+            active.sig = sig;
         }
 
-        active.page = page;
+        active.page = generic;
         ensureObserver();
         scanPage("apply");
     }

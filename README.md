@@ -12,7 +12,9 @@ A pipeline (`generate/cosmetic`) downloads cosmetic rules from filter lists
 ## Build modes
 - **Single-file (default)**: `cosmetic.user.js` embeds ALL rules inline. Every
   visited page is injected with its matched CSS immediately at
-  `document-start` — no network dependency, works offline.
+  `document-start` — no network dependency, works offline. Two `<style>` tags
+  per page: one with the **common** general rules (`*##...`), one with the
+  **site's own** rules for the visited domain.
 - **Lazy load (optional)**: uncomment the lazy block in
   `generate/cosmetic/generate.sh`. It produces a small shell
   (`cosmetic.user.js`) with a top-N domain baseline plus a separate JSON rules

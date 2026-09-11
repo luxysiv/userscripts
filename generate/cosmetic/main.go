@@ -73,12 +73,9 @@ func compileTable(table map[string]filter.CombineResult) compiledRules {
 	compiledSelectorRules := map[string]interface{}{}
 	compiledInjectionRules := map[string]interface{}{}
 	for domain, filter := range table {
-		// General "*##..." rules (the "" key) are intentionally excluded: the
-		// runtime only injects the rules that match the visited domain.
-		if domain == "" {
-			continue
-		}
-
+		// The general "*##..." rules ("" key) are compiled too: the runtime
+		// injects them as a "common" <style> on every page, separate from the
+		// visited domain's own rules.
 		if len(filter.Selectors) > 0 {
 			joined := joinSorted(filter.Selectors, ",")
 			if duplicateCount[joined] > 1 {
@@ -134,6 +131,11 @@ func subsetForTopDomains(table map[string]filter.CombineResult, top *topdomains.
 			out[domain] = table[domain]
 			kept++
 		}
+	}
+	// The general "*##..." rules are part of the "common" injection, so the
+	// lazy baseline keeps them as well.
+	if r, ok := table[""]; ok {
+		out[""] = r
 	}
 	return out
 }
