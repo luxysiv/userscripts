@@ -1,4 +1,4 @@
-package topdomains
+package main
 
 import (
 	"encoding/csv"

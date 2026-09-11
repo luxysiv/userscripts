@@ -12,10 +12,6 @@ import (
 	"strings"
 	"text/template"
 	"time"
-
-	"cosmetic/filter"
-	"cosmetic/topdomains"
-	"cosmetic/util"
 )
 
 //go:embed script-template.js
@@ -46,7 +42,7 @@ type compiledRules struct {
 	numInjections       int
 }
 
-func compileTable(table map[string]filter.CombineResult) compiledRules {
+func compileTable(table map[string]CombineResult) compiledRules {
 	duplicateCount := map[string]int{}
 	for _, f := range table {
 		joined := joinSorted(f.Selectors, ",")
@@ -121,9 +117,9 @@ func main() {
 	)
 	flag.Parse()
 
-	var topDomains *topdomains.TopDomainStorage
+	var topDomains *TopDomainStorage
 	if strings.TrimSpace(*topDomainsPath) != "" {
-		tdm, err := topdomains.FromFile(*topDomainsPath, *topDomainCount)
+		tdm, err := FromFile(*topDomainsPath, *topDomainCount)
 		if err != nil {
 			log.Fatalf("Reading top domains from file: %v", err)
 		}
@@ -133,7 +129,7 @@ func main() {
 
 	var scriptTemplate = template.Must(template.New("").Parse(string(scriptTemplateRaw)))
 
-	filterURLs, err := util.ReadListFile(*inputLists)
+	filterURLs, err := ReadListFile(*inputLists)
 	if err != nil {
 		log.Fatalf("cannot load list of filter URLs: %s\n", err.Error())
 	}
@@ -144,15 +140,15 @@ func main() {
 	}
 	defer os.RemoveAll(tempDir)
 
-	filterOutputFiles, err := util.DownloadURLs(filterURLs, tempDir)
+	filterOutputFiles, err := DownloadURLs(filterURLs, tempDir)
 	if err != nil {
 		log.Fatalf("error downloading filter lists: %s\n", err.Error())
 	}
 	log.Printf("Downloaded %d filter files\n", len(filterOutputFiles))
 
-	var filters []filter.Rule
+	var filters []Rule
 	for _, fp := range filterOutputFiles {
-		ff := util.FiltersFromFile(fp)
+		ff := FiltersFromFile(fp)
 		if len(ff) == 0 {
 			log.Printf("[Warning] No rules found in file %q\n", fp)
 		}
@@ -160,11 +156,11 @@ func main() {
 	}
 	fmt.Printf("Found %d filters in these files\n", len(filters))
 
-	lookupTable := filter.Combine(filters)
+	lookupTable := Combine(filters)
 
 	// Lite mode: only keep filters for top/important domains.
 	if topDomains != nil {
-		topDomainLookupTable := make(map[string]filter.CombineResult)
+		topDomainLookupTable := make(map[string]CombineResult)
 		for domain, filter := range lookupTable {
 			if domain == "" || topDomains.Contains(domain) {
 				topDomainLookupTable[domain] = filter
@@ -183,7 +179,7 @@ func main() {
 	}
 	defer outputFile.Close()
 
-	_, err = outputFile.WriteString("// THIS FILE IS AUTO-GENERATED. DO NOT EDIT. See generate/cosmetic directory for more info\n")
+	_, err = outputFile.WriteString("// THIS FILE IS AUTO-GENERATED. DO NOT EDIT. See generate/ directory for more info\n")
 	if err != nil {
 		log.Fatalf("could not write auto generated message: %s\n", err.Error())
 	}

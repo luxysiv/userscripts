@@ -1,4 +1,4 @@
-package util
+package main
 
 import (
 	"bufio"
@@ -14,8 +14,6 @@ import (
 	"sort"
 	"strings"
 	"time"
-
-	"cosmetic/filter"
 )
 
 // ReadListFile returns all URLs read from file `name` without duplicates, sorted
@@ -125,7 +123,7 @@ func generateFilename(url string) string {
 }
 
 // ParseFilterList parses the cosmetic rules from a filter list reader.
-func ParseFilterList(f io.Reader) (filters []filter.Rule) {
+func ParseFilterList(f io.Reader) (filters []Rule) {
 	scan := bufio.NewScanner(f)
 
 	for scan.Scan() {
@@ -135,7 +133,7 @@ func ParseFilterList(f io.Reader) (filters []filter.Rule) {
 			continue
 		}
 
-		filter, ok := filter.ParseLine(txt)
+		filter, ok := ParseLine(txt)
 		if ok {
 			filters = append(filters, filter)
 		}
@@ -145,7 +143,7 @@ func ParseFilterList(f io.Reader) (filters []filter.Rule) {
 }
 
 // FiltersFromFile reads a downloaded filter list and parses its rules.
-func FiltersFromFile(filepath string) (filters []filter.Rule) {
+func FiltersFromFile(filepath string) (filters []Rule) {
 	f, err := os.Open(filepath)
 	if err != nil {
 		panic(err)

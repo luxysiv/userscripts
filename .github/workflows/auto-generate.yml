@@ -15,12 +15,12 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@main
       with:
-        go-version-file: generate/cosmetic/go.mod
-        cache-dependency-path: generate/cosmetic/go.sum
+        go-version-file: generate/go.mod
+        cache-dependency-path: generate/go.sum
       
     - name: "Auto-generate userscript"
-      working-directory: generate/cosmetic
-      run: go run . -input filter-lists.txt -output ../../cosmetic.user.js -commit 2>&1
+      working-directory: generate
+      run: go run . -input filter-lists.txt -output ../cosmetic.user.js -commit 2>&1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

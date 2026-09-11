@@ -1,4 +1,4 @@
-// THIS FILE IS AUTO-GENERATED. DO NOT EDIT. See generate/cosmetic directory for more info
+// THIS FILE IS AUTO-GENERATED. DO NOT EDIT. See generate/ directory for more info
 // ==UserScript==
 // @name         Cosmetic Ad Block for Browser
 // @namespace    luxysiv
