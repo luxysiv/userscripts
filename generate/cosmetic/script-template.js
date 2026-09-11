@@ -106,11 +106,9 @@
             }
         }
 
-        let defaultRules = store.rules[""];
-        if (defaultRules != null) {
-            output.push({ "s": defaultRules, isDefault: true });
-        }
-
+        // Only rules matching the visited domain (or a subdomain of it) are
+        // injected. General "*##..." rules (the legacy "" entry) are NOT
+        // included, so a page never receives other sites' or global CSS.
         return output;
     }
 
@@ -139,7 +137,7 @@
         let generic = found.filter(r => r["s"] != null)
             .map(r => r["s"]).join(",");
         let css = found.filter(r => r["i"] != null).map(r => r["i"]).join("");
-        let page = found.filter(r => r["s"] != null && !r.isDefault)
+        let page = found.filter(r => r["s"] != null)
             .map(r => r["s"]).join(",");
 
         log("Applying", source, "rules for", host, generic.length + " selector chars");
