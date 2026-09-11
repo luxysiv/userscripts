@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Cosmetic Ad Block for Browser{{if .isLite}} (Lite){{end}}{{if .isLazy}} (Lazy){{end}}
+// @name         Cosmetic Ad Block for Browser{{if .isLite}} (Lite){{end}}
 // @namespace    luxysiv
 // @version      {{.version}}
-// @description  Blocks annoying elements in pages, sourced from many different filter lists{{if .isLazy}} (rules loaded from a bundle){{end}}
+// @description  Blocks annoying elements in pages, sourced from many different filter lists
 // @author       luxysiv 
 // @match        *://*/*
 // @grant        none
@@ -19,7 +19,7 @@
     const DEBUG = false;
 
     let log = function (...data) {
-        if (DEBUG) console.log("[Cosmetic filters by luxysiv (v{{.version}} {{if .isLite}}lite{{else}}full{{end}}{{if .isLazy}} lazy{{end}})]:", ...data);
+        if (DEBUG) console.log("[Cosmetic filters by luxysiv (v{{.version}} {{if .isLite}}lite{{else}}full{{end}})]:", ...data);
     }
 
     // A single invalid member of a selector list is ignored by CSS, so the
@@ -27,53 +27,14 @@
     const HIDE_RULE = "{display:none!important;visibility:hidden!important}";
 
     // ---------------------------------------------------------------------
-    // Inline rules (the full set for normal builds, an offline baseline for
-    // lazy builds).
+    // Inline rules (the complete rule set of the build).
     // ---------------------------------------------------------------------
     let deduplicatedStrings = {{.deduplicatedStrings }};
     let injectionRules = {{.injectionRules }};
     let rules = {{.rules }};
 
-    const IS_LAZY = {{if .isLazy}}true{{else}}false{{end}};
-    const RULES_URL = "{{.lazyRulesURL}}";
-    // The cache key is versioned, so the bundle is re-fetched once a day
-    // (whenever the version changes) and served from cache in between.
-    const CACHE_KEY = "cosmetic-rules-v{{.version}}";
-
     function makeStore(dedup, inj, r) {
         return { dedup: dedup, inj: inj, rules: r };
-    }
-
-    function loadCachedFull() {
-        try {
-            let raw = localStorage.getItem(CACHE_KEY);
-            if (raw) return JSON.parse(raw);
-        } catch (e) { /* storage unavailable or corrupted */ }
-        return null;
-    }
-
-    // Returns the full rule bundle: a cached copy or a network fetch. Never
-    // rejects; on any failure the caller falls back to the inline baseline.
-    function loadFull() {
-        let cached = loadCachedFull();
-        if (cached) {
-            log("Using cached rules bundle");
-            return Promise.resolve(cached);
-        }
-        log("Fetching rules bundle from", RULES_URL);
-        return fetch(RULES_URL, { cache: "no-store" })
-            .then(function (res) {
-                if (!res.ok) throw new Error("HTTP " + res.status);
-                return res.json();
-            })
-            .then(function (data) {
-                try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) { /* quota */ }
-                return data;
-            })
-            .catch(function (err) {
-                log("Could not load rules bundle, using inline baseline:", err);
-                return null;
-            });
     }
 
     // ---------------------------------------------------------------------
@@ -232,27 +193,8 @@
     // ---------------------------------------------------------------------
     let baseline = makeStore(deduplicatedStrings, injectionRules, rules);
 
-    // In a normal build the inline data is already the full rule set, so this
-    // runs once and everything is synchronous. documentElement is available at
-    // document-start, no waiting for <head>.
+    // Runs once, synchronously, at document-start (documentElement exists
+    // before <head>), so every page gets its styles immediately, with no
+    // network dependency.
     applyStore(baseline, "baseline");
-
-    if (IS_LAZY) {
-        loadFull().then(function (full) {
-            if (full && full.r) {
-                applyStore(makeStore(full.d || [], full.i || {}, full.r), "full");
-            }
-        });
-        // If the cache is empty long after load (fetch failed earlier, e.g.
-        // due to network), retry periodically.
-        setInterval(function () {
-            if (loadCachedFull() == null) {
-                loadFull().then(function (full) {
-                    if (full && full.r) {
-                        applyStore(makeStore(full.d || [], full.i || {}, full.r), "full");
-                    }
-                });
-            }
-        }, 6 * 60 * 60 * 1000);
-    }
 }
